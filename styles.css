@@ -1,0 +1,106 @@
+/* Reset and Canvas Styling */
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #0a0a23; /* Dark background for futuristic feel */
+}
+
+canvas {
+    display: block;
+}
+
+/* UI Container */
+#ui {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    font-family: Arial, sans-serif;
+}
+
+/* Buttons */
+#ui button {
+    margin: 5px;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 1px solid #00ffff; /* Neon cyan border */
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#ui button:hover {
+    background: rgba(0, 255, 255, 0.2); /* Neon hover effect */
+}
+
+/* Minimap */
+#minimap {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 150px;
+    height: 150px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00ffff;
+}
+
+/* Loading Screen */
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #00ffff;
+    font-family: Arial, sans-serif;
+}
+
+/* Settings Menu */
+#settings-menu {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    color: white;
+    border: 1px solid #00ffff;
+    border-radius: 3px;
+}
+
+#settings-menu label {
+    display: block;
+    margin: 5px 0;
+}
+
+#settings-menu input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+}
+
+/* High Contrast Mode */
+.high-contrast #ui {
+    background: #ffffff;
+    color: #000000;
+}
+
+.high-contrast #ui button {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+}
+
+.high-contrast #ui button:hover {
+    background: #cccccc;
+}
+
+.high-contrast #settings-menu {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+}
+
+.high-contrast #loading {
+    color: #000000;
+}
