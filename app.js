@@ -28,42 +28,17 @@ for (let i = 0; i < 5; i++) {
     scene.add(platform);
 }
 
-// Audio Setup
-const listener = new THREE.AudioListener();
-camera.add(listener);
-const ambientSound = new THREE.Audio(listener);
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load('/assets/ambient.mp3', (buffer) => {
-    ambientSound.setBuffer(buffer);
-    ambientSound.setLoop(true);
-    ambientSound.setVolume(0.5);
-    ambientSound.play();
-});
-
-// Motorcycle Setup
-let motorcycle;
-const loader = new THREE.GLTFLoader();
-const loadingDiv = document.getElementById('loading');
-loadingDiv.classList.remove('hidden');
-loader.load('/assets/motorcycle.glb', (gltf) => {
-    motorcycle = gltf.scene;
-    motorcycle.scale.set(0.5, 0.5, 0.5);
-    scene.add(motorcycle);
-    loadingDiv.classList.add('hidden');
-}, undefined, (error) => console.error(error));
+// Motorcycle Setup (Fallback: Simple Box)
+const motorcycleGeometry = new THREE.BoxGeometry(1, 0.5, 2);
+const motorcycleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+const motorcycle = new THREE.Mesh(motorcycleGeometry, motorcycleMaterial);
+scene.add(motorcycle);
+document.getElementById('loading').classList.add('hidden'); // Hide loading immediately
 
 // Headlight
 const headlight = new THREE.SpotLight(0xffffff, 1, 10, Math.PI / 6);
 headlight.position.set(0, 0.5, 1);
-motorcycle && motorcycle.add(headlight);
-
-// Engine Sound
-const engineSound = new THREE.Audio(listener);
-audioLoader.load('/assets/engine.mp3', (buffer) => {
-    engineSound.setBuffer(buffer);
-    engineSound.setLoop(true);
-    engineSound.setVolume(0.3);
-});
+motorcycle.add(headlight);
 
 // Paths
 const paths = {
@@ -127,11 +102,8 @@ document.getElementById('start').addEventListener('click', () => {
 });
 
 document.getElementById('customize').addEventListener('click', () => {
-    if (!motorcycle) return;
     const color = prompt("Enter color (e.g., #ff0000):", "#ff0000");
-    motorcycle.traverse((child) => {
-        if (child.isMesh) child.material.color.set(color);
-    });
+    motorcycleMaterial.color.set(color);
 });
 
 document.getElementById('toggleMode').addEventListener('click', () => {
@@ -170,7 +142,6 @@ document.addEventListener('keydown', (event) => {
 // Animation Loop
 function animate() {
     requestAnimationFrame(animate);
-    if (!motorcycle) return;
 
     // Update Motorcycle
     if (autoDrive) fraction = Math.min(fraction + speed, 1);
@@ -178,8 +149,6 @@ function animate() {
     motorcycle.position.copy(position);
     const tangent = currentPath.getTangent(fraction);
     motorcycle.lookAt(position.clone().add(tangent));
-    engineSound.setVolume(autoDrive || fraction > 0 ? 0.3 : 0);
-    if (!engineSound.isPlaying && (autoDrive || fraction > 0)) engineSound.play();
 
     // Update Camera
     const targetCameraPos = position.clone().add(new THREE.Vector3(0, 5, 10));
