@@ -30,10 +30,15 @@ for (let i = 0; i < 5; i++) {
 
 // Motorcycle Setup (Fallback: Simple Box)
 const motorcycleGeometry = new THREE.BoxGeometry(1, 0.5, 2);
-const motorcycleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+const motorcycleMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
 const motorcycle = new THREE.Mesh(motorcycleGeometry, motorcycleMaterial);
 scene.add(motorcycle);
-document.getElementById('loading').classList.add('hidden'); // Hide loading immediately
+
+// Check if the loading element exists before trying to modify it
+const loadingElement = document.getElementById('loading');
+if (loadingElement) {
+    loadingElement.classList.add('hidden'); // Hide loading immediately
+}
 
 // Headlight
 const headlight = new THREE.SpotLight(0xffffff, 1, 10, Math.PI / 6);
@@ -42,9 +47,21 @@ motorcycle.add(headlight);
 
 // Paths
 const paths = {
-    projects: new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, 0), new THREE.Vector3(10, 0, -10), new THREE.Vector3(20, 0, 0)]),
-    education: new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, 0), new THREE.Vector3(-10, 0, -10), new THREE.Vector3(-20, 0, 0)]),
-    experience: new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -20), new THREE.Vector3(10, 0, -30)])
+    projects: new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0, 0), 
+        new THREE.Vector3(10, 0, -10), 
+        new THREE.Vector3(20, 0, 0)
+    ]),
+    education: new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0, 0), 
+        new THREE.Vector3(-10, 0, -10), 
+        new THREE.Vector3(-20, 0, 0)
+    ]),
+    experience: new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0, 0), 
+        new THREE.Vector3(0, 0, -20), 
+        new THREE.Vector3(10, 0, -30)
+    ])
 };
 
 // Interactive Objects with LOD
@@ -57,9 +74,15 @@ const experience = [{ position: paths.experience.getPoint(0.5), title: "Software
 
 function createInteractiveObject(data) {
     const lod = new THREE.LOD();
-    const highDetail = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
-    const lowDetail = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
-    lod.addLevel(highDetail, 5);
+    const highDetail = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 32, 32), 
+        new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+    );
+    const lowDetail = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 8, 8), 
+        new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+    );
+    lod.addLevel(highDetail, 0);  // Corrected distance (0 for highest detail)
     lod.addLevel(lowDetail, 20);
     lod.position.copy(data.position);
     lod.userData = data;
@@ -86,45 +109,72 @@ const direction = new THREE.Vector3(0, 0, -1);
 
 // Minimap
 const minimapCanvas = document.getElementById('minimap');
-const minimapContext = minimapCanvas.getContext('2d');
-function updateMinimap() {
-    minimapContext.clearRect(0, 0, 150, 150);
-    minimapContext.fillStyle = 'white';
-    minimapContext.fillRect((fraction * 140) + 5, 70, 5, 5);
-    requestAnimationFrame(updateMinimap);
+if (minimapCanvas) {
+    const minimapContext = minimapCanvas.getContext('2d');
+    
+    function updateMinimap() {
+        minimapContext.clearRect(0, 0, 150, 150);
+        minimapContext.fillStyle = 'white';
+        minimapContext.fillRect((fraction * 140) + 5, 70, 5, 5);
+        requestAnimationFrame(updateMinimap);
+    }
+    updateMinimap();
 }
-updateMinimap();
 
 // UI Event Listeners
-document.getElementById('start').addEventListener('click', () => {
-    fraction = 0;
-    autoDrive = true;
-});
+const startButton = document.getElementById('start');
+if (startButton) {
+    startButton.addEventListener('click', () => {
+        fraction = 0;
+        autoDrive = true;
+    });
+}
 
-document.getElementById('customize').addEventListener('click', () => {
-    const color = prompt("Enter color (e.g., #ff0000):", "#ff0000");
-    motorcycleMaterial.color.set(color);
-});
+const customizeButton = document.getElementById('customize');
+if (customizeButton) {
+    customizeButton.addEventListener('click', () => {
+        const color = prompt("Enter color (e.g., #ff0000):", "#ff0000");
+        if (color) {
+            motorcycleMaterial.color.set(color);
+        }
+    });
+}
 
-document.getElementById('toggleMode').addEventListener('click', () => {
-    autoDrive = !autoDrive;
-});
+const toggleModeButton = document.getElementById('toggleMode');
+if (toggleModeButton) {
+    toggleModeButton.addEventListener('click', () => {
+        autoDrive = !autoDrive;
+    });
+}
 
-document.getElementById('settings').addEventListener('click', () => {
-    document.getElementById('settings-menu').classList.toggle('hidden');
-});
+const settingsButton = document.getElementById('settings');
+const settingsMenu = document.getElementById('settings-menu');
+if (settingsButton && settingsMenu) {
+    settingsButton.addEventListener('click', () => {
+        settingsMenu.classList.toggle('hidden');
+    });
+}
 
-document.getElementById('closeSettings').addEventListener('click', () => {
-    document.getElementById('settings-menu').classList.add('hidden');
-});
+const closeSettingsButton = document.getElementById('closeSettings');
+if (closeSettingsButton && settingsMenu) {
+    closeSettingsButton.addEventListener('click', () => {
+        settingsMenu.classList.add('hidden');
+    });
+}
 
-document.getElementById('highContrast').addEventListener('change', (e) => {
-    document.body.classList.toggle('high-contrast', e.target.checked);
-});
+const highContrastCheckbox = document.getElementById('highContrast');
+if (highContrastCheckbox) {
+    highContrastCheckbox.addEventListener('change', (e) => {
+        document.body.classList.toggle('high-contrast', e.target.checked);
+    });
+}
 
-document.getElementById('reduceMotion').addEventListener('change', (e) => {
-    reduceMotion = e.target.checked;
-});
+const reduceMotionCheckbox = document.getElementById('reduceMotion');
+if (reduceMotionCheckbox) {
+    reduceMotionCheckbox.addEventListener('change', (e) => {
+        reduceMotion = e.target.checked;
+    });
+}
 
 // Manual Controls
 document.addEventListener('keydown', (event) => {
@@ -152,21 +202,54 @@ function animate() {
 
     // Update Camera
     const targetCameraPos = position.clone().add(new THREE.Vector3(0, 5, 10));
-    if (reduceMotion) camera.position.copy(targetCameraPos);
-    else camera.position.lerp(targetCameraPos, 0.1);
+    if (reduceMotion) {
+        camera.position.copy(targetCameraPos);
+    } else {
+        camera.position.lerp(targetCameraPos, 0.1);
+    }
     camera.lookAt(motorcycle.position);
 
     // Headlight Interaction
     raycaster.set(motorcycle.position, direction.clone().applyQuaternion(motorcycle.quaternion));
-    const intersects = raycaster.intersectObjects(interactiveObjects.map(o => o.children[0]));
-    if (intersects.length > 0) {
-        const obj = intersects[0].object.parent;
-        obj.scale.set(1.5, 1.5, 1.5);
-        if (intersects[0].distance < 5) console.log(obj.userData); // Replace with popup
-    }
+    
+    // Create a function to get all meshes from LOD objects
+    const getAllChildMeshes = (obj) => {
+        const children = [];
+        obj.children.forEach(child => {
+            if (child instanceof THREE.Mesh) {
+                children.push(child);
+            }
+        });
+        return children;
+    };
+    
+    // Collect all meshes from LOD objects for raycasting
+    const interactiveMeshes = [];
     interactiveObjects.forEach(obj => {
-        if (!intersects.some(i => i.object.parent === obj)) obj.scale.set(1, 1, 1);
+        interactiveMeshes.push(...getAllChildMeshes(obj));
     });
+    
+    const intersects = raycaster.intersectObjects(interactiveMeshes);
+    
+    // Reset all object scales first
+    interactiveObjects.forEach(obj => {
+        obj.scale.set(1, 1, 1);
+    });
+    
+    if (intersects.length > 0) {
+        // Find parent LOD for the intersected mesh
+        const hitMesh = intersects[0].object;
+        const hitLOD = interactiveObjects.find(obj => 
+            obj.children.indexOf(hitMesh) !== -1
+        );
+        
+        if (hitLOD) {
+            hitLOD.scale.set(1.5, 1.5, 1.5);
+            if (intersects[0].distance < 5) {
+                console.log(hitLOD.userData); // Replace with popup
+            }
+        }
+    }
 
     renderer.render(scene, camera);
 }
