@@ -8,6 +8,7 @@
 body {
     background: #000;
     color: #fff;
+    line-height: 1.6;
 }
 
 .container {
@@ -60,20 +61,20 @@ nav a:hover {
 .hero {
     background: linear-gradient(135deg, #000, #1a1a1a);
     text-align: center;
-    padding: 200px 0 100px;
+    padding: 150px 0 100px;
     min-height: 100vh;
     display: flex;
     align-items: center;
 }
 
 .hero h1 {
-    font-size: 60px;
+    font-size: 48px;
     margin-bottom: 20px;
 }
 
 .hero p {
-    font-size: 22px;
-    margin-bottom: 40px;
+    font-size: 20px;
+    margin-bottom: 30px;
     color: #ccc;
 }
 
@@ -89,17 +90,17 @@ nav a:hover {
 }
 
 .hero button:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 /* Animations */
 .fade-in {
-    animation: fadeIn 1.5s ease-in-out;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .fade-in-delay {
-    animation: fadeIn 1.5s ease-in-out 0.5s;
-    animation-fill-mode: both;
+    animation: fadeIn 1s ease-in-out 0.3s forwards;
+    opacity: 0;
 }
 
 .pulse {
@@ -113,20 +114,20 @@ nav a:hover {
 
 @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(0, 180, 216, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(0, 180, 216, 0); }
+    70% { box-shadow: 0 0 0 15px rgba(0, 180, 216, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 180, 216, 0); }
 }
 
 /* Capabilities Section */
 .capabilities {
-    padding: 100px 0;
+    padding: 80px 0;
     background: #000;
 }
 
 .capabilities h2 {
     text-align: center;
-    font-size: 40px;
-    margin-bottom: 60px;
+    font-size: 36px;
+    margin-bottom: 50px;
     color: #00b4d8;
 }
 
@@ -135,71 +136,64 @@ nav a:hover {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(50px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .capability-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    gap: 30px;
 }
 
 .capability-card {
-    background: #1a1a1a;
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
     position: relative;
-    overflow: hidden;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.capability-card h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #00b4d8;
-}
-
-.capability-card p {
-    font-size: 16px;
-    color: #aaa;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
 }
 
 .capability-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 20px rgba(0, 180, 216, 0.5);
+    transform: translateY(-5px);
 }
 
-.orbit {
-    animation: orbitIn 1.5s ease-out;
+.three-canvas {
+    width: 100%;
+    height: 200px;
+    display: block;
 }
 
-@keyframes orbitIn {
-    from { opacity: 0; transform: scale(0.8) rotate(10deg); }
-    to { opacity: 1; transform: scale(1) rotate(0deg); }
-}
-
-.glow {
+/* Overlay for text */
+.capability-card::before {
+    content: attr(data-title);
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(0, 180, 216, 0.2) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: #00b4d8;
+    z-index: 2;
 }
 
-.capability-card:hover .glow {
-    opacity: 1;
+.capability-card::after {
+    content: attr(data-desc);
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    font-size: 16px;
+    color: #aaa;
+    z-index: 2;
 }
 
 /* Footer */
 footer {
     background: #000;
     text-align: center;
-    padding: 30px 0;
+    padding: 20px 0;
     border-top: 1px solid #1a1a1a;
 }
 
@@ -214,16 +208,15 @@ footer p {
     }
 
     .hero h1 {
-        font-size: 40px;
+        font-size: 32px;
     }
 
     .hero p {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     nav ul {
         flex-direction: column;
-        text-align: center;
         gap: 15px;
     }
 }
