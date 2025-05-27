@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00b4d8, wireframe: true });
         const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        scene.add(cube)
 
         // Point Light for glow effect
         const light = new THREE.PointLight(0x00b4d8, 1, 100);
