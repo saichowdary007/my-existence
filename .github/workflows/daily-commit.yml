@@ -3,7 +3,7 @@ name: Daily Auto Commit
 
 on:
   schedule:
-    - cron: '26 22 * * *'    # 11 AM CST
+    - cron: '*/15 * * * *'    # 11 AM CST
   workflow_dispatch:
 
 jobs:
