@@ -1,0 +1,38 @@
+# .github/workflows/daily-commit.yml
+name: Daily Auto Commit
+
+on:
+  schedule:
+    - cron: '0 17 * * *'    # 11 AM CST
+  workflow_dispatch:
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Flip the word
+        run: |
+          # read current word
+          CURRENT=$(< daily-word.txt)
+          # choose the other one
+          if [ "$CURRENT" = "hello" ]; then
+            echo "world" > daily-word.txt
+          else
+            echo "hello" > daily-word.txt
+          fi
+          git add daily-word.txt
+
+      - name: Commit & push
+        run: |
+          git diff --cached --quiet || \
+            (git commit -m "chore: flip daily word" && git push)
