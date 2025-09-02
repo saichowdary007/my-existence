@@ -1,4 +1,4 @@
-
+// Three.js setup for 3D cubes
 document.addEventListener('DOMContentLoaded', () => {
     const canvases = document.querySelectorAll('.three-canvas');
     canvases.forEach(canvas => {
